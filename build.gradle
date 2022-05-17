@@ -2,11 +2,14 @@ plugins {
     id 'java'
 }
 
-group 'org.example'
+group 'ge.magticom'
 version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+}
+configurations {
+    isdk
 }
 
 dependencies {
@@ -15,9 +18,19 @@ dependencies {
     implementation( 'log4j:log4j:1.2.17')
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
     implementation group: 'org.graylog2', name: 'syslog4j', version: '0.9.60'
-//    implementation group: 'org.graylog2.log4j2', name: 'log4j2-gelf', version: '1.3.1'
     implementation 'org.graylog2:gelfj:1.1.16'
+    implementation group: 'com.appdynamics.agent', name: 'agent-api', version: '4.5.18.29239'
+    isdk group: 'com.appdynamics.agent', name: 'agent-api', version: '4.5.18.29239'
 
+}
+
+jar {
+    configurations.isdk.collect {
+        it.isDirectory() ? from(it) : from(zipTree(it)) {
+            include 'com/appdynamics/agent/api/AppdynamicsAgent.class'
+        }
+    }
+    includeEmptyDirs = false
 }
 
 test {
