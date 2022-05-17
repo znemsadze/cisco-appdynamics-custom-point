@@ -22,7 +22,7 @@ public class MymagtiInterceptor extends AGenericInterceptor {
         Rule.Builder bldr = new Rule.Builder(CLASS_TO_INSTRUMENT);
         bldr = bldr.classMatchType(SDKClassMatchType.MATCHES_CLASS).classStringMatchType(SDKStringMatchType.EQUALS);
         bldr = bldr.methodMatchString(METHOD_TO_INSTRUMENT).methodStringMatchType(SDKStringMatchType.EQUALS);
-        List<Rule> result = new ArrayList<Rule>();
+        List<Rule> result = new ArrayList<>();
         result.add(bldr.build());
         return result;
     }
