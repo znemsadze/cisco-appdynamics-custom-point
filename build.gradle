@@ -15,16 +15,32 @@ configurations {
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-    implementation( 'log4j:log4j:1.2.17')
+    implementation 'log4j:log4j:1.2.17'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
     implementation group: 'org.graylog2', name: 'syslog4j', version: '0.9.60'
     implementation 'org.graylog2:gelfj:1.1.16'
     implementation group: 'com.appdynamics.agent', name: 'agent-api', version: '4.5.18.29239'
     isdk group: 'com.appdynamics.agent', name: 'agent-api', version: '4.5.18.29239'
-
 }
+//jar {
+////    configurations.isdk.collect {
+////        it.isDirectory() ? from(it) : from(zipTree(it)) {
+////            include 'com/appdynamics/agent/api/AppdynamicsAgent.class'
+////        }
+////    }
+//    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+//
+//    from {
+//        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+//    }
+//    includeEmptyDirs = false
+//
+//}
 
 jar {
+    manifest {
+        attributes 'Main-Class': 'ge.magticom.appdynamics.SimpleHello'
+    }
     configurations.isdk.collect {
         it.isDirectory() ? from(it) : from(zipTree(it)) {
             include 'com/appdynamics/agent/api/AppdynamicsAgent.class'
@@ -32,6 +48,8 @@ jar {
     }
     includeEmptyDirs = false
 }
+
+
 
 test {
     useJUnitPlatform()

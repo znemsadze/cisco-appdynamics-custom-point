@@ -13,7 +13,6 @@ import org.apache.log4j.Logger;
 import java.util.*;
 
 public class CCareGenericInterceptor extends AGenericInterceptor {
-    public static Logger logger=Logger.getLogger(CCareGenericInterceptor.class);
     private static final String CLASS_TO_INSTRUMENT = "com.magti.billing.ejb.beans.fascade.service.ws.portal";
     private static final String METHOD_TO_INSTRUMENT = "createOrderParent";
     private IReflector ireflector_synH;
@@ -33,11 +32,11 @@ public class CCareGenericInterceptor extends AGenericInterceptor {
 
     @Override
     public List<Rule> initializeRules() {
-        logger.info("In initializeRules");
+        System.out.println("In initializeRules");
         Rule.Builder bldr = new Rule.Builder(CLASS_TO_INSTRUMENT);
         bldr = bldr.classMatchType(SDKClassMatchType.MATCHES_CLASS).classStringMatchType(SDKStringMatchType.EQUALS);
         bldr = bldr.methodMatchString(METHOD_TO_INSTRUMENT).methodStringMatchType(SDKStringMatchType.EQUALS);
-        List<Rule> result = new ArrayList<Rule>();
+        List<Rule> result = new ArrayList<>();
         result.add(bldr.build());
         return result;
     }
@@ -51,10 +50,10 @@ public class CCareGenericInterceptor extends AGenericInterceptor {
             );
             requestURI = this.ireflector_rURI.execute(paramValues[0].getClass().getClassLoader(),paramValues[0]
             ).toString();
-            logger.info("In begin isdk " + singularityH);
-            logger.info("In begin isdk " + requestURI);
+            System.out.println("In begin isdk " + singularityH);
+            System.out.println("In begin isdk " + requestURI);
         } catch (ReflectorException e) {
-            logger.error(e.getMessage());
+            System.out.println(e.getMessage());
             e.printStackTrace();
         }
         AppdynamicsAgent.startTransaction("SampleGenericInterceptorBT-" + requestURI, singularityH, EntryTypes.POJO, false);
@@ -63,7 +62,7 @@ public class CCareGenericInterceptor extends AGenericInterceptor {
 
     public void onMethodEnd(Object state, Object invokedObject, String className, String methodName,
                             Object[] paramValues, Throwable thrownException, Object returnValue) {
-        logger.info("In end");
+        System.out.println("In end");
         Transaction currentTransaction = AppdynamicsAgent.getTransaction();
         currentTransaction.end();
     }
