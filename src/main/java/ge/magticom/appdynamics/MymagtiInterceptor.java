@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MymagtiInterceptor extends AGenericInterceptor {
-    private static final String CLASS_TO_INSTRUMENT = "com.mymagti.core.services.impl";
+    private static final String CLASS_TO_INSTRUMENT = "com.mymagti.core.services.impl.OrderServiceimpl";
     private static final String METHOD_TO_INSTRUMENT = "createOrderBase";
     @Override
     public List<Rule> initializeRules() {
@@ -30,20 +30,19 @@ public class MymagtiInterceptor extends AGenericInterceptor {
         System.out.println(className+" "+methodName+" onMethodBegin start");
         System.out.printf("Pittaloooooooo========================================="+className+" "+methodName+" onMethodBegin start");
         Transaction currentTransaction = AppdynamicsAgent.getTransaction();
-        ExitCall exitCall = currentTransaction.startExitCall(UniqueIdentifiersEnum.CREATE_PORTAL_ORDER_IDENTIFIER.getValues(),
-                String.format("iSDK  %s exit call", UniqueIdentifiersEnum.CREATE_PORTAL_ORDER_IDENTIFIER.getValues()),
-                ExitTypes.CUSTOM, false);
+        ExitCall exitCall = currentTransaction.startExitCall( "exitCall",
+                "iSDK  exit call" ,    ExitTypes.CUSTOM, false);
         String correlationHeader = exitCall.getCorrelationHeader();
-        System.out.println("correlationHeader="+correlationHeader);
+        System.out.println("correlationHeader===================================="+correlationHeader);
         String[] types = new String[]{String.class.getCanonicalName()};
         IReflector headerReflector = getNewReflectionBuilder()
-                .invokeInstanceMethod("setHeader", false, types)
+                .invokeInstanceMethod(METHOD_TO_INSTRUMENT, false, types)
                 .build();
         try {
-            headerReflector.execute(paramValues[0].getClass().getClassLoader(),
-                    paramValues[0], new Object[]{correlationHeader});
+            headerReflector.execute(paramValues[22].getClass().getClassLoader(),
+                    paramValues[22], new Object[]{correlationHeader});
         } catch (ReflectorException e) {
-            System.out.println("Caught reflector exception"+ e.getMessage());
+            System.out.println("Caught reflector exception=========================="+ e.getMessage());
         }
         return null;
     }
