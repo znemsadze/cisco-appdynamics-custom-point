@@ -40,8 +40,8 @@ public class MymagtiInterceptor extends AGenericInterceptor {
         System.out.println("correlationHeader===================================="+correlationHeader);
         String[] types = new String[]{"java.lang.String","java.lang.Long","java.lang.Long","java.lang.Long","java.lang.Long","java.lang.String"};
         IReflector headerReflector = getNewReflectionBuilder()
-                .loadClass(className)
-                .invokeInstanceMethod(methodName, true,types )
+                .loadClass(CLASS_TO_INSTRUMENT)
+                .invokeInstanceMethod(METHOD_TO_INSTRUMENT, true,types )
                 .build();
         try {
             headerReflector.execute(paramValues[0].getClass().getClassLoader(),
