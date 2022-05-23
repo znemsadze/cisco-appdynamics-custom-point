@@ -52,7 +52,6 @@ public class MymagtiInterceptor extends AGenericInterceptor {
         }
         return null;
     }
-
     @Override
     public void onMethodEnd(Object state, Object invokedObject, String className, String methodName, Object[] paramValues, Throwable thrownException, Object returnValue) {
         System.out.println(className+" "+methodName+" method End");
