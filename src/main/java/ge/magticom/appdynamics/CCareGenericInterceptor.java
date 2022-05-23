@@ -9,25 +9,19 @@ import com.appdynamics.instrumentation.sdk.SDKStringMatchType;
 import com.appdynamics.instrumentation.sdk.template.AGenericInterceptor;
 import com.appdynamics.instrumentation.sdk.toolbox.reflection.IReflector;
 import com.appdynamics.instrumentation.sdk.toolbox.reflection.ReflectorException;
-import org.apache.log4j.Logger;
 import java.util.*;
 
 public class CCareGenericInterceptor extends AGenericInterceptor {
-    private static final String CLASS_TO_INSTRUMENT = "com.magti.billing.ejb.beans.fascade.service.ws.portal.PortalPaymentManagement";
-    private static final String METHOD_TO_INSTRUMENT = "createOrderParent";
+    private static final String CLASS_TO_INSTRUMENT = "com.magti.billing.ejb.beans.fascade.service.ws.portal.PortalCommonManagement";
+    private static final String METHOD_TO_INSTRUMENT = "getPackagesCor";
     private IReflector ireflector_synH;
-    private IReflector ireflector_rURI;
 
     public CCareGenericInterceptor() {
         super();
         this.ireflector_synH = getNewReflectionBuilder()
-                .invokeInstanceMethod("createOrderParent", false)
-                .invokeInstanceMethod("getFirst", false, new String[]{"java.lang.String"} )
+                .invokeInstanceMethod(METHOD_TO_INSTRUMENT, false, new String[]{"java.lang.String"} )
                 .build();
-        this.ireflector_rURI = getNewReflectionBuilder()
-                .invokeInstanceMethod("getRequestURI", false)
-                //.invokeInstanceMethod("getFirst", false, new String[]{"java.lang.String"} )
-                .build();
+
     }
 
     @Override
@@ -45,16 +39,15 @@ public class CCareGenericInterceptor extends AGenericInterceptor {
         String singularityH = null;
         String requestURI = null;
         System.out.println("CCareGenericInterceptor onMethodBegin========================================"+className+" "+methodName+" " );
-        System.out.println("CCareGenericInterceptor onMethodBegin========================================"+className+" "+methodName+" "+paramValues[22] );
-        System.out.println("CCareGenericInterceptor onMethodBegin========================================"+className+" "+methodName+" "+paramValues);
-        try {
-            singularityH = this.ireflector_synH.execute(paramValues[22].getClass().getClassLoader(),paramValues[22]);
-            System.out.println("CCareGenericInterceptor In begin isdk==================== " + singularityH);
-        } catch (ReflectorException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
+        System.out.println("CCareGenericInterceptor onMethodBegin========================================"+className+" "+methodName+" "+paramValues[0] );
+        if(paramValues!=null && paramValues.length>0){
+            for(int i=0;i<paramValues.length;i++){
+                System.out.println("paramValues"+paramValues[i].toString());
+            }
         }
-        AppdynamicsAgent.startTransaction("SampleGenericInterceptorBT-=================================" + requestURI, singularityH, EntryTypes.POJO, false);
+        singularityH = paramValues[0].toString() ;
+        System.out.println("CCareGenericInterceptor In begin isdk==================== singularityH=" + singularityH);
+        AppdynamicsAgent.startTransaction("SampleGenericInterceptorBT-" + singularityH, singularityH, EntryTypes.POJO, false);
         return null;
     }
 

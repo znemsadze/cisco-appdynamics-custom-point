@@ -11,8 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MymagtiInterceptor extends AGenericInterceptor {
-    private static final String CLASS_TO_INSTRUMENT = "com.mymagti.core.services.impl.OrderServiceimpl";
-    private static final String METHOD_TO_INSTRUMENT = "createOrderBase";
+    private static final String CLASS_TO_INSTRUMENT = "com.mymagti.core.services.impl.PackageServiceImpl";
+    private static final String METHOD_TO_INSTRUMENT = "getPackagesBaseCor";
+
+
+    public MymagtiInterceptor() {
+        super();
+    }
     @Override
     public List<Rule> initializeRules() {
         System.out.println("MymagtiInterceptor initializeRules");
@@ -28,21 +33,23 @@ public class MymagtiInterceptor extends AGenericInterceptor {
     @Override
     public Object onMethodBegin(Object invokedObject, String className, String methodName, Object[] paramValues) {
         System.out.println(className+" "+methodName+" onMethodBegin start");
-        System.out.printf("Pittaloooooooo========================================="+className+" "+methodName+" onMethodBegin start");
+        System.out.printf("========================================="+className+" "+methodName+" onMethodBegin start");
         Transaction currentTransaction = AppdynamicsAgent.getTransaction();
         ExitCall exitCall = currentTransaction.startExitCall( "exitCall",
                 "iSDK  exit call" ,    ExitTypes.CUSTOM, false);
         String correlationHeader = exitCall.getCorrelationHeader();
         System.out.println("correlationHeader===================================="+correlationHeader);
-        String[] types = new String[]{String.class.getCanonicalName()};
+        String[] types = new String[]{"java.lang.String","java.lang.Long","java.lang.Long","java.lang.Long","java.lang.Long","java.lang.String"};
         IReflector headerReflector = getNewReflectionBuilder()
-                .invokeInstanceMethod(METHOD_TO_INSTRUMENT, false, types)
+                .loadClass(className)
+                .invokeInstanceMethod(methodName, true,types )
                 .build();
         try {
-            headerReflector.execute(paramValues[22].getClass().getClassLoader(),
-                    paramValues[22], new Object[]{correlationHeader});
+            headerReflector.execute(paramValues[0].getClass().getClassLoader(),
+                    paramValues[0], new Object[]{correlationHeader});
         } catch (ReflectorException e) {
             System.out.println("Caught reflector exception=========================="+ e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }
