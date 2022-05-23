@@ -21,7 +21,6 @@ public class MymagtiInterceptor extends AGenericInterceptor {
     @Override
     public List<Rule> initializeRules() {
         System.out.println("MymagtiInterceptor initializeRules");
-        System.out.println("Pittaloooooooo=========================================MymagtiInterceptor initializeRules");
         Rule.Builder bldr = new Rule.Builder(CLASS_TO_INSTRUMENT);
         bldr = bldr.classMatchType(SDKClassMatchType.MATCHES_CLASS).classStringMatchType(SDKStringMatchType.EQUALS);
         bldr = bldr.methodMatchString(METHOD_TO_INSTRUMENT).methodStringMatchType(SDKStringMatchType.EQUALS);
