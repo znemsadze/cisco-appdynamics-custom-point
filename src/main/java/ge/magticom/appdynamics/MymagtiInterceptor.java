@@ -57,5 +57,4 @@ public class MymagtiInterceptor extends AGenericInterceptor {
         System.out.println(className+" "+methodName+" method End");
     }
 
-
 }
