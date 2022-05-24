@@ -39,17 +39,16 @@ public class MymagtiInterceptor extends AGenericInterceptor {
         String correlationHeader = exitCall.getCorrelationHeader();
         System.out.println("correlationHeader===================================="+correlationHeader);
         String[] types = new String[]{"java.lang.String","java.lang.Long","java.lang.Long","java.lang.Long","java.lang.Long","java.lang.String"};
-        IReflector headerReflector = getNewReflectionBuilder()
-                .loadClass(CLASS_TO_INSTRUMENT)
-                .invokeInstanceMethod(METHOD_TO_INSTRUMENT, true,types )
-                .build();
         try {
+            IReflector headerReflector = getNewReflectionBuilder()
+                .invokeInstanceMethod( METHOD_TO_INSTRUMENT, false,types )
+                .build();
             headerReflector.execute(paramValues[0].getClass().getClassLoader(),
-                    paramValues[0], new Object[]{correlationHeader});
+                    paramValues[0], new Object[]{correlationHeader ,paramValues[1],paramValues[2],paramValues[3],paramValues[4],paramValues[5]});
         } catch (ReflectorException e) {
-            System.out.println("Caught reflector exception=========================="+ e.getMessage());
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
+
         return null;
     }
     @Override
