@@ -47,15 +47,15 @@ public class CCareGenericInterceptor extends AGenericInterceptor {
         }
         singularityH = paramValues[0].toString() ;
         System.out.println("CCareGenericInterceptor In begin isdk==================== singularityH=" + singularityH);
-        AppdynamicsAgent.startTransaction("SampleGenericInterceptorBT-" + singularityH, singularityH, EntryTypes.POJO, false);
+//        AppdynamicsAgent.startTransaction("SampleGenericInterceptorBT-" + singularityH, singularityH, EntryTypes.POJO, false);
         return null;
     }
 
     public void onMethodEnd(Object state, Object invokedObject, String className, String methodName,
                             Object[] paramValues, Throwable thrownException, Object returnValue) {
         System.out.println("In end");
-        Transaction currentTransaction = AppdynamicsAgent.getTransaction();
-        currentTransaction.end();
+//        Transaction currentTransaction = AppdynamicsAgent.getTransaction();
+//        currentTransaction.end();
     }
 
 }
