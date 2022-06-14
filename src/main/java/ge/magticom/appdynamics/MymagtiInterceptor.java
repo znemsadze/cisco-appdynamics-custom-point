@@ -23,7 +23,7 @@ public class MymagtiInterceptor extends AGenericInterceptor {
         super();
         getErrorCode = getNewReflectionBuilder().invokeInstanceMethod("getErrorCode", true).build(); //if it doesn't return com.mymagti.core.constants.Constants.STATUS_OK, it is an error
         getErrorMessage = getNewReflectionBuilder().invokeInstanceMethod("getErrorMessage", true).build(); //i'm speculating here, please set this to something correct
-        getLogger().info(String.format("Initialized Magti Interceptor SDK Plugin")); //look in the agent log files for appd, debug is silenced unless pulling debug logs from controller
+//        getLogger().info(String.format("Initialized Magti Interceptor SDK Plugin")); //look in the agent log files for appd, debug is silenced unless pulling debug logs from controller
     }
 
     @Override
@@ -62,10 +62,15 @@ public class MymagtiInterceptor extends AGenericInterceptor {
                 if( "".equals(transaction.getUniqueIdentifier()) ) { //transaction is not real, log it, return null
                     getLogger().info("Transaction is not started while producer is creating an exit call, we need to make sure the exit call happens during a BT");
                     return null;
-                }// else continue
+                }
                 Map<String,String> map = new HashMap();
-                exitCall = transaction.startExitCall(map, methodName, ExitTypes.CUSTOM, false);
-                paramValues[0] = exitCall.getCorrelationHeader(); //this is rewriting the parameter to be the exit call correlation header before the method executes
+                exitCall = transaction.startExitCall( "exitCall"+className+methodName,
+                        "iSDK  exit call" ,    ExitTypes.CUSTOM, false);
+                correlationHeader = exitCall.getCorrelationHeader();
+//                exitCall = transaction.startExitCall(map,methodName, ExitTypes.CUSTOM, false);
+//                correlationHeader=exitCall.getCorrelationHeader();
+                System.out.println( "appdynamics================== correlationHeader="+correlationHeader);
+                paramValues[0] = correlationHeader; //this is rewriting the parameter to be the exit call correlation header before the method executes
                 System.out.println("appdynamics================== paramValues[0]="+paramValues[0]);
                 break;
             }
@@ -82,7 +87,6 @@ public class MymagtiInterceptor extends AGenericInterceptor {
                 break;
             }
         }
-
         if( transaction == null ) transaction = AppdynamicsAgent.getTransaction(); //this may end up being a fake transaction, but we will need it later, so let's get the fake one worst case scenario
         return new State(transaction, exitCall);
     }
